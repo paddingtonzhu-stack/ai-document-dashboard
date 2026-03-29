@@ -21,6 +21,11 @@ async function getDb() {
       filename TEXT NOT NULL,
       original_text TEXT NOT NULL,
       summary TEXT NOT NULL,
+      technical_skills TEXT DEFAULT '[]',
+      soft_skills TEXT DEFAULT '[]',
+      language_skills TEXT DEFAULT '[]',
+      experience TEXT DEFAULT '[]',
+      education TEXT DEFAULT '[]',
       key_points TEXT NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )

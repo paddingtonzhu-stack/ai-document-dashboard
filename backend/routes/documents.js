@@ -46,9 +46,9 @@ router.post('/upload', upload.single('document'), async (req, res) => {
     return res.status(422).json({ error: 'File appears to be empty or unreadable.' });
   }
 
-  let summary, keyPoints;
+  let summary, technicalSkills, softSkills, languageSkills, experience, education, keyPoints;
   try {
-    ({ summary, keyPoints } = await summarize(text));
+    ({ summary, technicalSkills, softSkills, languageSkills, experience, education, keyPoints } = await summarize(text));
   } catch (err) {
     return res.status(502).json({ error: `AI summarization failed: ${err.message}` });
   }
@@ -57,6 +57,11 @@ router.post('/upload', upload.single('document'), async (req, res) => {
     filename: req.file.originalname,
     originalText: text,
     summary,
+    technicalSkills,
+    softSkills,
+    languageSkills,
+    experience,
+    education,
     keyPoints,
   });
 
@@ -70,14 +75,14 @@ router.post('/summarize', express.json(), async (req, res) => {
     return res.status(400).json({ error: 'No text provided.' });
   }
 
-  let summary, keyPoints;
+  let summary, technicalSkills, softSkills, languageSkills, experience, education, keyPoints;
   try {
-    ({ summary, keyPoints } = await summarize(text));
+    ({ summary, technicalSkills, softSkills, languageSkills, experience, education, keyPoints } = await summarize(text));
   } catch (err) {
     return res.status(502).json({ error: `AI summarization failed: ${err.message}` });
   }
 
-  const doc = await saveDocument({ filename, originalText: text, summary, keyPoints });
+  const doc = await saveDocument({ filename, originalText: text, summary, technicalSkills, softSkills, languageSkills, experience, education, keyPoints });
   res.json(doc);
 });
 
