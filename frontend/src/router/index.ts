@@ -1,8 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import Upload from '../views/Upload.vue';
 import History from '../views/History.vue';
 
-const routes = [
+const routes: RouteRecordRaw[] = [
   { path: '/', component: Upload },
   { path: '/history', component: History },
 ];

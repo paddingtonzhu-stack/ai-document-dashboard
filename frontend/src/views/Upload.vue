@@ -84,26 +84,27 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
-import { uploadDocument } from '../services/api';
+import { uploadDocument, type DocumentRecord } from '../services/api';
 
-const selectedFile = ref(null);
-const loading = ref(false);
-const error = ref('');
-const result = ref(null);
-const dragging = ref(false);
-const fileInput = ref(null);
+const selectedFile = ref<File | null>(null);
+const loading = ref<boolean>(false);
+const error = ref<string>('');
+const result = ref<DocumentRecord | null>(null);
+const dragging = ref<boolean>(false);
+const fileInput = ref<HTMLInputElement | null>(null);
 
-function onFileChange(e) {
-  selectedFile.value = e.target.files[0] || null;
+function onFileChange(e: Event) {
+  const target = e.target as HTMLInputElement;
+  selectedFile.value = target.files?.[0] ?? null;
   error.value = '';
   result.value = null;
 }
 
-function onDrop(e) {
+function onDrop(e: DragEvent) {
   dragging.value = false;
-  const file = e.dataTransfer.files[0];
+  const file = e.dataTransfer?.files?.[0] ?? null;
   if (file) {
     selectedFile.value = file;
     error.value = '';
@@ -116,22 +117,23 @@ async function submit() {
   loading.value = true;
   error.value = '';
   result.value = null;
+
   try {
     result.value = await uploadDocument(selectedFile.value);
   } catch (e) {
-    error.value = e.message;
+    error.value = e instanceof Error ? e.message : 'Unknown error';
   } finally {
     loading.value = false;
   }
 }
 
-function formatSize(bytes) {
+function formatSize(bytes: number): string {
   return bytes < 1024 * 1024
     ? `${(bytes / 1024).toFixed(1)} KB`
     : `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
-function formatDate(dt) {
+function formatDate(dt: string): string {
   return new Date(dt + 'Z').toLocaleString();
 }
 </script>

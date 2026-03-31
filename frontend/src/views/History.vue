@@ -64,30 +64,30 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { fetchHistory } from '../services/api';
+import { fetchHistory, type DocumentRecord } from '../services/api';
 
-const docs = ref([]);
-const loading = ref(true);
-const error = ref('');
-const expanded = ref(null);
+const docs = ref<DocumentRecord[]>([]);
+const loading = ref<boolean>(true);
+const error = ref<string>('');
+const expanded = ref<string | null>(null);
 
 onMounted(async () => {
   try {
     docs.value = await fetchHistory();
   } catch (e) {
-    error.value = e.message;
+    error.value = e instanceof Error ? e.message : 'Unknown error';
   } finally {
     loading.value = false;
   }
 });
 
-function toggle(id) {
+function toggle(id: string) {
   expanded.value = expanded.value === id ? null : id;
 }
 
-function formatDate(dt) {
+function formatDate(dt: string) {
   return new Date(dt + 'Z').toLocaleString();
 }
 </script>
