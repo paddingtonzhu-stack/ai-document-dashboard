@@ -21,6 +21,7 @@ const upload = multer({
 
 router.post('/upload', upload.single('document'), async (req: Request, res: Response<DocumentRecord | { error: string }>) => {
   const file = req.file;
+  console.log('Received file upload:', file?.originalname, 'size:', file?.size);
   if (!file) {
     return res.status(400).json({ error: 'No file uploaded.' });
   }
@@ -79,6 +80,7 @@ router.post('/upload', upload.single('document'), async (req: Request, res: Resp
 
 router.post('/summarize', express.json(), async (req: Request, res: Response<DocumentRecord | { error: string }>) => {
   const { text, filename = 'manual-input.txt' } = req.body;
+  console
   if (!text || !text.trim()) {
     return res.status(400).json({ error: 'No text provided.' });
   }
